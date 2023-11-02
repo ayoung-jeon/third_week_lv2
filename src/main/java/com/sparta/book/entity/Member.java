@@ -1,12 +1,13 @@
 package com.sparta.book.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.book.dto.MemberRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity  // JPA가 관리할 수 있는 Entity 클래스 지정
 @Getter
@@ -34,10 +35,11 @@ public class Member {
     private String address;  // 주소
 
     // rental 과 연결
+    @JsonIgnore // JSON 직렬화 시 무한 루프가 발생하지 않도록
     @OneToOne(mappedBy = "member")
     private Rental rental;
 
-    private Date modifiedAt;
+    private LocalDate modifiedAt;
 
     public Member(MemberRequestDto requestDto) {
         this.name = requestDto.getName();

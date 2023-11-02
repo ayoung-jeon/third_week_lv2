@@ -12,7 +12,7 @@ import com.sparta.book.repository.RentalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -38,20 +38,20 @@ public class RentalService {
         Member member = memberRepository.findById(requestDto.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
-        // 현재 대출 상태라면 대출이 불가능 조건
+        // 현재 도서가 대출 상태라면 대출이 불가능 조건
         if (!book.isAvailable()) {
             throw new IllegalArgumentException("이미 대출된 책입니다.");
         }
 
-        // 반납하지 않은 책이 있다면 대출이 불가능 조건
+        // 회원이 반납하지 않은 책이 있다면 대출이 불가능 조건
         List<Rental> existingRentals = rentalRepository.findByMemberAndIsReturnedFalse(member);
         if (!existingRentals.isEmpty()) {
-            throw new IllegalArgumentException("이미 대출 중인 책이 있습니다. 회원 ID: " + member.getMemberId());
+            throw new IllegalArgumentException("회원님은 현재 대출 상태입니다. 회원 ID: " + member.getMemberId());
         }
 
         // 대출 정보 생성
         Rental rental = new Rental(book, member);
-        rental.setDueDate(LocalDateTime.now().plusDays(7)); // 7일 후로 반납 기한 설정
+        rental.setDueDate(LocalDate.now().plusDays(7)); // 7일 후로 반납 기한 설정
 
         // 대출 정보 저장
         Rental saveRental = rentalRepository.save(rental);
@@ -73,8 +73,26 @@ public class RentalService {
         return new RentalResponseDto(rental);
     }
 
+    // 대출 내역 전체 조회 (오름차순)
     public List<RentalResponseDto> getRental() {
         return rentalRepository.findAllByOrderByModifiedAtAsc().stream().map(RentalResponseDto::new).toList();
     }
 
+    @Transactional // 반납 처리
+    public RentalResponseDto returnBook(Long rentalId) {
+        // 대출 기록 찾기
+        Rental rental = rentalRepository.findById(rentalId)
+                .orElseThrow(() -> new IllegalArgumentException("대출 기록이 없습니다. rentalId=" + rentalId));
+
+        // 반납 처리
+        rental.returnBook();
+
+        // 책 상태 업데이트
+        Book book = rental.getBook();
+        book.setAvailable(true);
+        bookRepository.save(book);
+
+        // 변경된 대출 기록 반환
+        return new RentalResponseDto(rental);
+    }
 }

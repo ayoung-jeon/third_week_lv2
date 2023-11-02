@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -31,10 +31,10 @@ public class Rental extends Timestamped{
     private boolean isReturned = false;
 
     @Column
-    private LocalDateTime dueDate;  // 반납 예정일
+    private LocalDate dueDate;  // 반납 예정일
 
     @Column
-    private LocalDateTime returnedDate;  // 실제 반납일
+    private LocalDate returnedDate;  // 실제 반납일
 
     public Rental(Book book, Member member) {
         this.book = book;
@@ -45,6 +45,6 @@ public class Rental extends Timestamped{
     // 반납일을 필드의 값을 현재 시간으로 설정
     public void returnBook() {
         this.isReturned = true;
-        this.returnedDate = LocalDateTime.now();
+        this.returnedDate = LocalDate.now(); // 현재 사용 날짜를 표시한다.
     }
 }

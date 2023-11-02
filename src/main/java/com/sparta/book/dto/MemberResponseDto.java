@@ -3,8 +3,6 @@ package com.sparta.book.dto;
 import com.sparta.book.entity.Member;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 public class MemberResponseDto {
     // 내보내는(보여주는) 값

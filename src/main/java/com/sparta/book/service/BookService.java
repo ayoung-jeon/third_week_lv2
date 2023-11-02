@@ -5,7 +5,6 @@ import com.sparta.book.dto.BookResponseDto;
 import com.sparta.book.entity.Book;
 import com.sparta.book.repository.BookRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,10 +40,4 @@ public class BookService {
         // DB 조회
         return bookRepository.findAllByOrderByModifiedAtAsc().stream().map(BookResponseDto::new).toList();
     }
-
-//    private Book findBook(Long bookId) {
-//        return BookRepository.findById(bookId).orElseThrow(() ->
-//                new IllegalArgumentException("선택한 도서는 존재하지 않습니다.")
-//        );
-//    }
 }

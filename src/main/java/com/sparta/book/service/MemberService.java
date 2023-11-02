@@ -6,7 +6,6 @@ import com.sparta.book.dto.MemberResponseDto;
 import com.sparta.book.entity.Member;
 import com.sparta.book.repository.MemberRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,10 +20,10 @@ public class MemberService {
 
     public MemberResponseDto createMember(MemberRequestDto requestDto) {
         // RequestDto -> Entity
-        Member memeber = new Member(requestDto);
+        Member member = new Member(requestDto);
 
         // DB 저장
-        Member saveMember = memberRepository.save(memeber);
+        Member saveMember = memberRepository.save(member);
 
         // Entity -> ResponseDto
         MemberResponseDto memeberResponseDto = new MemberResponseDto(saveMember);
@@ -47,5 +46,4 @@ public class MemberService {
         // DB 조회
         return memberRepository.findAllByOrderByModifiedAtAsc().stream().map(MemberResponseDto::new).toList();
     }
-
 }

@@ -32,4 +32,9 @@ public class RentalController {
     public List<RentalResponseDto> getRental() {
         return rentalService.getRental();
     }
+
+    @PutMapping("/rental/{rentalId}/return")  // 도서 반납
+    public RentalResponseDto returnBook(@PathVariable Long rentalId) {
+        return rentalService.returnBook(rentalId);
+    }
 }

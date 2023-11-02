@@ -13,7 +13,7 @@ public class RentalResponseDto {
     private Long bookId;   // 도서 식별값
     private Long memberId;  // 회원 식별값
     private boolean isReturned;  // 대출 상태
-    private LocalDateTime createdAt;  //대출한 시간
+    private LocalDateTime createdAt;  //대출일
     private LocalDateTime dueDate;  // 반납 예정일
     // 과제 필수 부분
     private String memberName;  // 회원이름
@@ -26,8 +26,8 @@ public class RentalResponseDto {
         this.bookId = rental.getBook().getBookId();  // Book 엔터티의 식별값을 얻음
         this.memberId = rental.getMember().getMemberId();  // Member 엔터티의 식별값을 얻음
         this.isReturned = rental.getBook().isAvailable();  // 대출 상태
-        this.createdAt = rental.getCreatedAt();  // 대출 날짜와 시간
-        this.dueDate = rental.getDueDate();  // 반납예정일
+        this.createdAt = rental.getCreatedAt().atStartOfDay();  // 대출일
+        this.dueDate = rental.getDueDate().atStartOfDay();  // 반납예정일
         // 필수 구현 부분
         this.memberName = rental.getMember().getName();
         this.memberPhoneNumber = rental.getMember().getPhoneNumber();
