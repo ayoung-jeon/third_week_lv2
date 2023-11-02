@@ -36,7 +36,7 @@ public class Member {
 
     // rental 과 연결
     @JsonIgnore // JSON 직렬화 시 무한 루프가 발생하지 않도록
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member") //!
     private Rental rental;
 
     private LocalDate modifiedAt;

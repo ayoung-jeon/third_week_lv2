@@ -44,7 +44,7 @@ public class RentalService {
         }
 
         // 회원이 반납하지 않은 책이 있다면 대출이 불가능 조건
-        List<Rental> existingRentals = rentalRepository.findByMemberAndIsReturnedFalse(member);
+        List<Rental> existingRentals = rentalRepository.findByMemberAndReturnedDateIsNull(member);
         if (!existingRentals.isEmpty()) {
             throw new IllegalArgumentException("회원님은 현재 대출 상태입니다. 회원 ID: " + member.getMemberId());
         }
@@ -84,15 +84,15 @@ public class RentalService {
         Rental rental = rentalRepository.findById(rentalId)
                 .orElseThrow(() -> new IllegalArgumentException("대출 기록이 없습니다. rentalId=" + rentalId));
 
-        // 반납 처리
-        rental.returnBook();
-
         // 책 상태 업데이트
         Book book = rental.getBook();
         book.setAvailable(true);
         bookRepository.save(book);
 
-        // 변경된 대출 기록 반환
-        return new RentalResponseDto(rental);
+        // 변경된 대출 기록을 반환하기 전에 Rental 인스턴스를 삭제하려고 추가해본 코드임
+        RentalResponseDto responseDto = new RentalResponseDto(rental);
+        rentalRepository.delete(rental);
+
+        return responseDto;
     }
 }
