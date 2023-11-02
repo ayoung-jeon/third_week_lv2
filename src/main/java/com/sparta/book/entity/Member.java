@@ -6,12 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity  // JPA가 관리할 수 있는 Entity 클래스 지정
 @Getter
 @Setter
 @Table(name = "member")  // 매핑할 테이블의 이름을 지정
 @NoArgsConstructor
-public class Member extends Timestamped {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;  // 회원 식별값
@@ -30,6 +32,12 @@ public class Member extends Timestamped {
 
     @Column(name = "address", nullable = false)
     private String address;  // 주소
+
+    // rental 과 연결
+    @OneToOne(mappedBy = "member")
+    private Rental rental;
+
+    private Date modifiedAt;
 
     public Member(MemberRequestDto requestDto) {
         this.name = requestDto.getName();

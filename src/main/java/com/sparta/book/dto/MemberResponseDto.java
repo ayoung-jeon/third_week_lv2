@@ -14,8 +14,7 @@ public class MemberResponseDto {
     private String gender;
     private String phoneNumber;
     private String address;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+
 
     public MemberResponseDto(Member member) {
         this.memberId = member.getMemberId();
@@ -23,7 +22,6 @@ public class MemberResponseDto {
         this.gender = member.getGender();
         this.phoneNumber = member.getPhoneNumber();
         this.address = member.getAddress();
-        this.createdAt = member.getCreatedAt();
-        this.modifiedAt = member.getModifiedAt();
+
     }
 }
