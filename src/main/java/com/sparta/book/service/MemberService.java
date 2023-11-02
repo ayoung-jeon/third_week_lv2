@@ -37,11 +37,6 @@ public class MemberService {
         return new MemberResponseDto(member);
     }
 
-    private Member findMember(Long memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() ->
-                new IllegalArgumentException("선택한 회원 정보는 존재하지 않습니다."));
-    }
-
     public List<MemberResponseDto> getMembers() {
         // DB 조회
         return memberRepository.findAllByOrderByModifiedAtAsc().stream().map(MemberResponseDto::new).toList();
